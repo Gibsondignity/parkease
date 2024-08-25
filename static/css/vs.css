@@ -1,0 +1,191 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background: linear-gradient(to bottom, #000, #4A4A4A);
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px; /* Reduced width for better centering */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.logo h1 {
+    margin: 10px 0;
+    font-size: 24px;
+}
+
+.logo h1 span {
+    color: #B5FF25;
+}
+
+.login-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centering form elements */
+}
+
+.login-form input {
+    width: 90%; /* Reduced width to create margin from the container */
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background: #333;
+    color: #fff;
+    text-align: left; /* Align text inside input fields to the left */
+}
+
+.login-form button {
+    width: 90%;
+    padding: 12px;
+    border: none;
+    border-radius: 30px;
+    background: #B5FF25;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.login-form button:hover {
+    background: #A1E622;
+}
+
+.forgot-password {
+    color: #B5FF25;
+    font-size: 12px;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+}
+
+.or {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.or span {
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+    margin: 0 10px; /* Spacing between the line and "or" */
+}
+
+
+.social-login button {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid rgb(181, 255, 37); /* Stroke color */
+    border-radius: 30px;
+    background: transparent; /* Make the background transparent */
+    color: rgb(181, 255, 37); /* Text color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    position: relative; /* Allow icon to be positioned */
+}
+
+.social-login button i {
+    margin-right: 10px; /* Space between icon and text */
+    font-size: 18px; /* Adjust icon size */
+}
+
+.social-login button img {
+    margin-right: 10px; /* Space between icon and text */
+    width: 20px; /* Adjust icon size */
+    height: 20px;
+}
+
+.social-login button:hover {
+    background-color: rgb(181, 255, 37); /* Green background on hover */
+    color: #000; /* Change text color to black on hover */
+}
+
+.social-login button:hover img {
+    filter: invert(1); /* Invert the color of the icon on hover */
+}
+
+
+
+
+
+
+.sign-up p {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.sign-up a {
+    color: #B5FF25;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.boxes {
+    height: 200px;
+    width: 200px;
+    background: red;
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 15px;
+        width: 90%;
+    }
+
+    .login-form button,
+    .social-login button {
+        width: 100%;
+        padding: 14px;
+        font-size: 14px;
+    }
+
+    .login-form input {
+        width: 100%;
+    }
+
+    .logo img {
+        width: 40px;
+    }
+
+    .logo h1 {
+        font-size: 20px;
+    }
+
+    .or {
+        margin: 15px 0;
+        font-size: 12px;
+    }
+
+    .sign-up p {
+        font-size: 12px;
+    }
+}

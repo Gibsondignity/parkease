@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkEase Login</title>
+    <link rel="stylesheet" href="{% static 'css/vs.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="{% static 'images/image02.png' %}" alt="image01" class="logo-img">
+            <h1>Park<span>Ease</span></h1>
+        </div>
+        <form class="login-form" method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="email" placeholder="Email" name="username" required>
+            <input type="password" placeholder="Password" name="password" required>
+            <button type="submit">Continue</button>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+        </form>
+        <div class="or">
+            <span></span>or<span></span>
+        </div>
+        
+        <div class="social-login">
+            <button class="google"><img src="{% static 'images/google.png' %}" alt="Google"> Continue with Google</button>
+            <button class="apple"><img src="{% static 'images/apple.png' %}" alt="Apple"> Continue with Apple</button>
+            <button class="facebook"><img src="{% static 'images/Facebook.png' %}" alt="Facebook"> Continue with Facebook</button>
+        </div>
+        
+       
+        <div class="sign-up">
+            <p>Don't have an account? <a href="#">Sign Up</a></p>
+        </div>
+
+        
+    </div>
+    <script src="{% static 'script/script.js' %}"></script>
+</body>
+</html>
