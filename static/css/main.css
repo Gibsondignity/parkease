@@ -112,11 +112,35 @@ body {
     color: #000;
     font-weight: bold;
     cursor: pointer;
-    position: absolute;
-    bottom: 20px;
+    /* position: absolute; */
+    /* bottom: 20px; */
     left: 10%;
 }
 
 .choose-button:hover {
     background: #A1E622;
 }
+
+
+/* .spot {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    border: 2px solid #000;
+    text-align: center;
+    display: inline-block;
+}
+
+.spot.available {
+    background-color: green;
+    color: white;
+}
+
+.spot.occupied {
+    background-color: red;
+    color: white;
+}
+
+.spot:hover {
+    cursor: pointer;
+} */

@@ -23,5 +23,6 @@ urlpatterns = [
     path('logout_view', views.logout_view, name="logout_view"),
     
     path('parking_spot', views.parking_spot, name="parking_spot"),
-    path('video-feed/', views.video_feed_view, name='video_feed'),
+    # path('video-feed/', views.video_feed_view, name='video_feed'),
+    # path('spot-status/', views.parking_spot_status, name='spot_status'),
 ]

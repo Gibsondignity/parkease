@@ -59,46 +59,72 @@ firebaseConfig = {
   'measurementId': "G-99NHCESW0E"
 }
 
+# firebaseConfig = {
+#     'apiKey': "",
+#     'authDomain': "",
+#     'databaseURL': '',
+#     'projectId': "",
+#     'storageBucket': "",
+#     'messagingSenderId': "",
+#     'appId': "",
+#     'measurementId': ""
+# }
+
 firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
-
-cap = cv2.VideoCapture('vid7.mp4')
-
-
 file_path  = os.path.join(BASE_DIR, 'venv', 'CarParkPos')
+video = os.path.join(BASE_DIR, 'venv', 'vid7.mp4')
+
+cap = cv2.VideoCapture(video)
+
 with open(file_path, 'rb') as f:
     posList = pickle.load(f)
-
 width, height = 75, 135
+
+# Initialize deque to store pixel counts for smoothing
 pixel_counts = [deque(maxlen=5) for _ in posList]
-totalSpaces = len(posList)
+
+# Initialize previous status for each parking space
+prev_status = [""] * len(posList)
+
+    
+
+# width, height = 75, 135
+# pixel_counts = [deque(maxlen=5) for _ in posList]
+# totalSpaces = len(posList)
 lastFirebaseUpdate = time.time()
 
 def checkParkingSpace(imgPro, img):
-    spaceCounter = 0
     for i, pos in enumerate(posList):
         x, y = pos
         cv2.rectangle(img, pos, (pos[0] + width, pos[1] + height), (255, 0, 0), 2)
         imgCrop = imgPro[y:y + height, x:x + width]
         count = cv2.countNonZero(imgCrop)
+        # Add current count to deque and calculate moving average
         pixel_counts[i].append(count)
         avg_count = np.mean(pixel_counts[i])
         cvzone.putTextRect(img, str(int(avg_count)), (x, y + height - 5), scale=1, thickness=1, offset=0)
-        if avg_count < 7000:
+        if avg_count < 7000:  # Adjusted threshold value
             color = (0, 255, 0)
             thickness = 3
-            spaceCounter += 1
+            status = "Free"
         else:
             color = (0, 0, 255)
             thickness = 3
+            status = "Occupied"
         cv2.rectangle(img, pos, (pos[0] + width, pos[1] + height), color, thickness)
-    cvzone.putTextRect(img, f'Available: {spaceCounter}/{totalSpaces}', (10, 50), scale=2, thickness=2, offset=10)
-    return img, spaceCounter
+        cvzone.putTextRect(img, status, (x, y + height + 20), scale=1, thickness=1, offset=0)
+        # Update Firebase only when status changes
+        if status != prev_status[i]:
+            prev_status[i] = status
+            threading.Thread(target=updateFirebase, args=(i, status)).start()
+    return img
 
-def updateFirebase(spaceCounter):
+
+def updateFirebase(space_id, status):
     global lastFirebaseUpdate
-    if time.time() - lastFirebaseUpdate > 1:
-        db.child("parking_data").update({"available_spaces": spaceCounter, "total_spaces": totalSpaces})
+    if time.time() - lastFirebaseUpdate > 1:  # Update every 1 second
+        db.child("parking_data").child(f"space_{space_id+1}").update({"status": status})
         lastFirebaseUpdate = time.time()
 
 def video_feed():
@@ -112,11 +138,10 @@ def video_feed():
             imgBlur = cv2.GaussianBlur(imgThreshold, (5, 5), 0)
             kernel = np.ones((3, 3), np.uint8)
             imgDilate = cv2.dilate(imgBlur, kernel, iterations=2)
-            img, spaceCounter = checkParkingSpace(imgDilate, img)
-            updateFirebase(spaceCounter)
+            img = checkParkingSpace(imgDilate, img)
             ret, jpeg = cv2.imencode('.jpg', img)
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n\r\n')
 
-def video_feed_view(request):
-    return StreamingHttpResponse(video_feed(), content_type='multipart/x-mixed-replace; boundary=frame')
+# def video_feed_view(request):
+#     return StreamingHttpResponse(video_feed(), content_type='multipart/x-mixed-replace; boundary=frame')

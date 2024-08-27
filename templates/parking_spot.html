@@ -7,6 +7,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Choose Parking Spot</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <style>
+        .card {
+            background-color: white;
+            border-radius: 20px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card .icon {
+            background-color: #7AF900;
+            border-radius: 50%;
+            padding: 15px;
+            display: inline-block;
+            margin-top: -40px;
+        }
+
+        .card .icon img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .card h1 {
+            font-size: 18px;
+            color: black;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #b0b0b0;
+            margin: 0;
+        }
+
+        .card .button {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #7AF900;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -15,36 +63,72 @@
             <span>1st Floor</span>
             <button class="floor-icon">&#9776;</button>
         </div>
-        {% comment %} <div class="parking-grid">
-            <div class="spot" id="A-12">
+        <div class="parking-grid">
+            <div class="spot space_1" id="A-12">
                 <img src="{% static 'images/Car 5.png' %}" alt="Car" class="car-icon">
                 <span>A-12</span>
+                <p class="space_1_text">Free</p>
             </div>
-            <div class="spot selected" id="A-13">
+            <div class="spot space_2" id="A-13">
                 <span>A-13</span>
-                <p>Selected</p>
+                <p></p>
             </div>
-            <div class="spot" id="A-14">
+            <div class="spot space_3" id="A-14">
                 <img src="{% static 'images/Car 5.png' %}" alt="Car" class="car-icon">
                 <span>A-14</span>
+                <p></p>
             </div>
-            <div class="spot available" id="B-13">
+            <div class="spot space_4" id="B-13">
                 <span>B-13</span>
-                <p>Available</p>
+                <p></p>
             </div>
-            <div class="spot" id="B-12">
+            <div class="spot space_5" id="B-12">
                 <img src="{% static 'images/Car 5.png' %}" alt="Car" class="car-icon">
                 <span>B-12</span>
+                <p></p>
             </div>
-            <div class="spot" id="B-11">
+            <div class="spot space_6" id="B-11">
                 <img src="{% static 'images/Car 5.png' %}" alt="Car" class="car-icon">
                 <span>B-11</span>
+                <p></p>
             </div>
         </div>
-        <button class="choose-button">Choose Spot</button> {% endcomment %}
+        <p class="spot_text"></p>
+
+        <!-- Book Spot Button -->
+        <button class="choose-button" id="book-spot-btn" style="display: none;">Book Spot</button>
+
+        <!-- Thank You Message -->
+        <div id="thank-you-message" style="display: none; margin: 10px; margin-top: 30px;">
+            <div class="card">
+                <div class="icon">
+                    <img src="{% static 'images/check.png'  %}" alt="Success Icon">
+                </div>
+                <h1>Booking is Successfully</h1>
+                <p>Go to next page to view your spot</p>
+                <a href="#" id="next-message-button" class="button">Next</a>
+            </div>
+        </div>
+
+        <div id="next-message" style="display: none; margin: 10px; margin-top: 30px;">
+            <div class="card">
+                
+                <img src="{% static 'images/gctu.jpg'  %}" alt="Success Icon">
+                
+                <h1>Booking is Successfully</h1>
+                <p class="current_spot"></p>
+                <a href="{% url 'parking_spot' %}" class="button">Go back</a>
+            </div>
+        </div>
 
 
-        <img src="{% url 'video_feed' %}" alt="Live Video Feed" width="800" height="600">
+
+        {% comment %} <button class="choose-button" style="display: hidden"> </button> {% endcomment %}
+        {% comment %} <button class="choose-button">Choose Spot</button>  {% endcomment %}
+        {% comment %} <button class="choose-button">Choose Spot</button>  {% endcomment %}
+
+
+        {% comment %} <img src="{% url 'video_feed' %}" width="0" height="0" > {% endcomment %}
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
@@ -53,55 +137,119 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'script/script.js' %}"></script>
 
-    <script type="text/javascript">
-        function fetchData() {
-            $.ajax({
-                url: "#",
-                type: "GET",
-                success: function(response) {
-                    let data = response.data;
-                    let html = '';
-                    data.forEach(item => {
-                        html += `<p>${item.field_name}</p>`; // Replace 'field_name' with your model's field
-                    });
-                    $('#data-container').html(html);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching data: ", error);
-                }
+    <script>
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfryOB57bf-oSSiZ3NUzTKLA7cvsuslJU",
+            authDomain: "parkease808802.firebaseapp.com",
+            databaseURL: "https://parkease808802-default-rtdb.firebaseio.com",
+            projectId: "parkease808802",
+            storageBucket: "parkease808802.appspot.com",
+            messagingSenderId: "438355709019",
+            appId: "1:438355709019:web:099fb339bf16a05e21c37e",
+            measurementId: "G-99NHCESW0E"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Fetch data from Firebase
+        $(document).ready(function() {
+            $('.choose-button').prop('disabled', true)
+            // Disable the button initially
+            $('#book-spot-btn').prop('disabled', true);
+
+
+            // Handle booking button click
+            $('#book-spot-btn').on('click', function() {
+                $('#thank-you-message').show(); 
+                $('#book-spot-btn').hide(); 
+                $('.spot_text').hide(); 
+
             });
+
+
+            $('#next-message-button').on('click', function() {
+                $('#thank-you-message').hide();
+                $('#book-spot-btn').hide();
+                $('.spot_text').hide();
+                $('#next-message').show();
+            })
+            
+        });
+
+
+
+        $(document).on('click', '.spot', function(e){
+            e.preventDefault();
+            var spot = $(this).attr('id');
+            if ($(this).hasClass('selected')) {
+                $('.spot_text').text(`${spot} is occupied`);
+                $('#book-spot-btn').hide(); // Hide the button if spot is occupied
+            } else {
+                $('.spot_text').text(`${spot} is available`);
+                $('#book-spot-btn').show().prop('disabled', false); // Show and enable the button if spot is available
+                $('.current_spot').text(`Spot ID: ${spot}`)
+            }
+        });
+
+        
+        function fetchData() {
+                const dbRef = database.ref('parking_data');
+                dbRef.once('value')
+                .then(function(snapshot) {
+                    const data = snapshot.val();
+                    console.log(data)
+                    space_1 = data['space_1']['status']
+                    space_2 = data['space_2']['status']
+                    space_3 = data['space_3']['status']
+                    space_4 = data['space_4']['status']
+                    space_5 = data['space_5']['status']
+                    space_6 = data['space_6']['status']
+                    
+                    if (space_1 === 'Occupied') {
+                        $('.space_1').addClass('selected');
+                    }else{
+                        $('.space_1').removeClass('selected');
+                    }
+                    if (space_2 === 'Occupied') {
+                        $('.space_2').addClass('selected');
+                    }else{
+                        $('.space_2').removeClass('selected');
+                    }
+                    if (space_3 === 'Occupied') {
+                        $('.space_3').addClass('selected');
+                    }else{
+                        $('.space_3').removeClass('selected');
+                    }
+                    if (space_4 === 'Occupied') {
+                        $('.space_4').addClass('selected');
+                    }else{
+                        $('.space_4').removeClass('selected');
+                    }
+                    if (space_5 === 'Occupied') {
+                        $('.space_5').addClass('selected');
+                    }else{
+                        $('.space_5').removeClass('selected');
+                    }
+                    if (space_6 === 'Occupied') {
+                        $('.space_6').addClass('selected');
+                    }else{
+                        $('.space_6').removeClass('selected');
+                    }
+
+                })
+                .catch(function(error) {
+                    console.error("Error fetching data: ", error);
+                });
         }
 
         // Fetch data every 5 seconds
-        //setInterval(fetchData, 5000);
+        setInterval(fetchData, 2000);
 
         // Initial fetch
-        //fetchData();
-
-
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        
-        const csrftoken = getCookie('csrftoken');
-        
-        $.ajaxSetup({
-            headers: {
-                'X-CSRFToken': csrftoken
-            }
-        });
-        
+        fetchData();
     </script>
 </body>
 </html>

@@ -37,6 +37,9 @@ pixel_counts = [deque(maxlen=5) for _ in posList]
 totalSpaces = len(posList)
 lastFirebaseUpdate = time.time()
 
+
+print(totalSpaces)
+
 def checkParkingSpace(imgPro, img):
     spaceCounter = 0
     for i, pos in enumerate(posList):
